@@ -9,6 +9,8 @@
 
 **********************************************************)
 
+{.$DEFINE ORIGINAL_PICTURES}
+
 uses
 {$IFDEF UNIX}
   CThreads,
@@ -19,9 +21,12 @@ uses
   ptcGraph,
   ptcCrt,
   ptcMouse,
-  //uobj,
-  ChessTypes,
+{$IFDEF ORIGINAL_PICTURES}
+  uobj,
+{$ELSE}
   Pictures,
+{$ENDIF}
+  ChessTypes,
   Colors24,
   mysystem;
 
@@ -3046,10 +3051,11 @@ begin
             left := brd_left + column[63 - j] * ch_width;
             top := brd_top + row[63 - j] * ch_height;
           end;
-          
-          //ShowFigure(left, top, ImageIndex(iPiece, iColor, desc[j] = 1));
+{$IFDEF ORIGINAL_PICTURES}
+          ShowFigure(left, top, ImageIndex(iPiece, iColor, desc[j] = 1));
+{$ELSE}
           DrawPicture(left, top, iPiece, iColor, desc[j] = 1);
-          
+{$ENDIF}
           SetColor(cWhite);
           if sel[j] <> 0 then
            {SetColor(graph.white);}
@@ -3300,8 +3306,11 @@ begin
 {     InitVar;}
     InitDefaultGame;
     
-    //LoadPic;
+{$IFDEF ORIGINAL_PICTURES}
+    LoadPic;
+{$ELSE}
     LoadPictures;
+{$ENDIF}
     
     ShowPos;
 

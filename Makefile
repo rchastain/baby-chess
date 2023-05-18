@@ -1,10 +1,13 @@
 SOURCES := $(wildcard *.pas)
 
 chess: $(SOURCES)
-	fpc -Mobjfpc -Sh $@ -ghl -dDEBUG
-
-release: $(SOURCES)
 	fpc -Mobjfpc -Sh chess -dRELEASE
+
+debug: $(SOURCES)
+	fpc -Mobjfpc -Sh chess -ghl -dDEBUG
+
+original: $(SOURCES)
+	fpc -Mobjfpc -Sh chess -dRELEASE -dORIGINAL_PICTURES
 
 clean:
 	rm -f *.bak
