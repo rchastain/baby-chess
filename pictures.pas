@@ -1,76 +1,64 @@
-
 unit Pictures;
-
-(* Warlord Chess Graphics by William H. Rogers *)
 
 interface
 
-uses
-  ChessTypes;
+{
+  линкование файла масок картинок
+  и вывод одной фигуры на экран
+}
 
 procedure LoadPictures;
-procedure DrawPicture(left, top: integer; p: TPiece; c: TColor; isBlackSq: boolean);
+procedure ShowFigure(left, top, number: word);
 
 implementation
 
 uses
-  ptcGraph, Colors24;
+  SysUtils, ptcGraph, Colors24;
 
 var
-  pict: array[0..5, 0..47, 0..47] of byte;
+  pic: array[0..62499] of byte;
 
 procedure LoadPictures;
 var
   f: text;
   s: string;
-  i, x, y: integer;
+  i, j: integer;
 begin
-
-  AssignFile(f, 'warlord.txt');
+  Assign(f, 'pictures.txt');
   Reset(f);
-
-  for i := 0 to 5 do
-    for y := 0 to 47 do
+  i := 0;
+  while not Eof(f) do
+  begin
+    ReadLn(f, s);
+    for j := 1 to Length(s) do
     begin
-      ReadLn(f, s);
-
-      for x := 0 to 47 do
-        pict[i, x, y] := Ord(s[Succ(x)]) - Ord('0');
+      pic[i] := Ord(s[j]) - Ord('0');
+      Inc(i);
     end;
-
-  CloseFile(f);
+  end;
 end;
 
-procedure DrawPicture(left, top: integer; p: TPiece; c: TColor; isBlackSq: boolean);
+procedure ShowFigure(left, top, number: word);
 const
-  pictureIndex: array[pawn..king] of integer = (0, 2, 3, 1, 4, 5);
+  sq_width = 50; {клетки доски}
+  sq_height = 50;
 var
-  x, y: integer;
-  squareColor, lineColor, pieceColor: longint;
-  
+  x, y: word;
+  color: longint;
+  p: word;
 begin
-  if isBlackSq then
-    squareColor := cDarkOrange
-  else
-    squareColor := cOrange;
-  
-  lineColor := cGray;
-  
-  if c = ChessTypes.white then
-    pieceColor := cWhite
-  else
-    pieceColor := cBlack;
-  
-  SetFillStyle(SolidFill, squareColor);
+  SetFillStyle(SolidFill, cWhite);
   Bar(left, top, left + 50, top + 50);
   
-  if p in [pawn..king] then
-    for y := 0 to 47 do
-      for x := 0 to 47 do
-        case pict[pictureIndex[p], x, y] of
-          1: PutPixel(left + x, top + y, lineColor);
-          2: PutPixel(left + x, top + y, pieceColor);
-        end;
+  if number > 24 then
+    Exit;
+  
+  p := number * sq_width * sq_height;
+    
+  for x := 0 to sq_width - 1 do
+    for y := 0 to sq_height - 1 do
+      if pic[p + y * sq_width + x] = 0 then
+        PutPixel(left + x, top + y, cBlack);
 end;
 
 end.

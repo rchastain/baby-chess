@@ -22,9 +22,9 @@ uses
   ptcCrt,
   ptcMouse,
 {$IFDEF ORIGINAL_PICTURES}
-  uobj,
-{$ELSE}
   Pictures,
+{$ELSE}
+  Warlord,
 {$ENDIF}
   ChessTypes,
   Colors24,
@@ -2898,15 +2898,16 @@ end;
 
 function ImageIndex(p: TPiece; c: TColor; isBlackSq: boolean): integer;
 const
-  dec: array[pawn..king] of integer =
-  (5, 4, 3, 2, 1, 0);
+  dec: array[pawn..king] of integer = (5, 4, 3, 2, 1, 0);
 var
   v: integer;
 begin
   if p = nopiece then
   begin
-    if isBlackSq then v := 24
-    else v := 25;
+    if isBlackSq then
+      v := 24
+    else
+      v := 25;
   end else
   begin
     if c = black then v := dec[p]
@@ -2922,8 +2923,8 @@ var
   c: integer;
 begin
   c := GetColor;
-  SetColor({ptcGraph.black}cBlack);
-  SetFillStyle(3, {ptcGraph.black}cBlack);
+  SetColor(cBlack);
+  SetFillStyle(3, cBlack);
   v[1].x := x; v[1].y := y;
   v[2].x := x + W; v[2].y := y;
   v[3].x := x + W; v[3].y := y + H;
@@ -2972,7 +2973,6 @@ var
   j, left, top: integer;
   t: LongInt;
 begin
-  //MouseHide;
   with game do
   begin
     if firstShow then
@@ -2982,7 +2982,6 @@ begin
   {   ClearDevice;}
       for j := low(TSquare) to high(TSquare) do
         showSave[j] := -1;
-      //MouseShow;
 
      {header}
       SetTextStyle(DefaultFont, HorizDir, 2);
@@ -3028,7 +3027,6 @@ begin
       end;
 
       ShowSearchStatus(0, 0, 0, 0);
-      //MouseHide;
     end;
 
     for j := low(TSquare) to high(TSquare) do
@@ -3056,17 +3054,20 @@ begin
 {$ELSE}
           DrawPicture(left, top, iPiece, iColor, desc[j] = 1);
 {$ENDIF}
-          SetColor(cWhite);
+
           if sel[j] <> 0 then
-           {SetColor(graph.white);}
-            Rectangle(left + 2, top + 2,
-              left + ch_width - 2, top + ch_height - 2);
-
-        end; {if}
-      end; {for j}
-
-  end; {with}
-  //MouseShow;
+          begin
+{$IFDEF ORIGINAL_PICTURES}
+          SetColor(cDarkGreen);
+{$ELSE}
+          SetColor(cWhite);
+{$ENDIF}
+            Rectangle(left + 2, top + 2, left + ch_width - 2, top + ch_height - 2);
+          end;
+          
+        end;
+      end;
+  end;
 end; {ShowPos}
 
 procedure ShowSearchStatus(depth, score, from, _to: integer);
@@ -3083,8 +3084,8 @@ begin
   H := 80; {46;}
   x := GetMaxX - W - 30;
   y := GetMaxY - H - 20;
-  SetColor({ptcGraph.white}cWhite);
-  SetFillStyle(3, {ptcGraph.black}cBlack);
+  SetColor(cWhite);
+  SetFillStyle(3, cBlack);
   v[1].x := x; v[1].y := y;
   v[2].x := x + W; v[2].y := y;
   v[3].x := x + W; v[3].y := y + H;
@@ -3105,13 +3106,7 @@ var
   countPress, mx, my, x, y: integer;
 begin
   MouseClick := false;
-{
-  mouseButtonDown(LEFT_BUTTON,
-    countPress,
-    mX,
-    mY
-    );
-}
+
   GetMouseState(mx, my, countPress);
   
   if countPress > 0 then
@@ -3306,11 +3301,7 @@ begin
 {     InitVar;}
     InitDefaultGame;
     
-{$IFDEF ORIGINAL_PICTURES}
-    LoadPic;
-{$ELSE}
     LoadPictures;
-{$ENDIF}
     
     ShowPos;
 

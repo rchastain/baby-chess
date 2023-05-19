@@ -2,11 +2,17 @@
 
 [Baby Chess](https://github.com/evgeniykorniloff/baby-chess) by Evgeniy Korniloff ported to Free Pascal and ptcGraph.
 
-![Screenshot](screenshot.png)
-
 ## Graphics
 
-The chess pieces come from Warlord by William H. Rogers.
+Baby Chess for ptcGraph has two chess pieces set.
+
+The original pieces have been restored with kind help of [RetroNick](https://github.com/RetroNick2020).
+
+![Original pieces](original.png)
+
+The new pieces come from [Warlord chess program](https://www.chessprogramming.org/Warlord) by William H. Rogers.
+
+![New pieces](warlord.png)
 
 ## Build
 
@@ -20,4 +26,3 @@ To use the original pictures:
 make original
 ```
 
-Currently the original pictures are not available. You will see numbers instead of chess pieces.
