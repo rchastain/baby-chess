@@ -2959,14 +2959,14 @@ const
   msg1 = 'BabyChess';
   menu: array[0..5] of string =
   (
-    'Cntrl-A   move (go)',
-{   'Cntrl-Z   undo',
-   'Cntrl-X   redo', }
-    'Cntrl-W   new (white)',
-    'Cntrl-B   new (black)',
-    'Cntrl-S   save ',
-    'Cntrl-D   load ',
-    'Esc       exit'
+    'Ctrl+A   Move',
+   {'Ctrl+Z   Undo',
+    'Ctrl+X   Redo',}
+    'Ctrl+W   New (White)',
+    'Ctrl+B   New (Black)',
+    'Ctrl+S   Save',
+    'Ctrl+D   Load',
+    'Esc      Exit'
     );
   liters: array[0..7] of char = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h');
 var
@@ -3058,9 +3058,9 @@ begin
           if sel[j] <> 0 then
           begin
 {$IFDEF ORIGINAL_PICTURES}
-          SetColor(cDarkGreen);
+            SetColor(cDarkGreen);
 {$ELSE}
-          SetColor(cWhite);
+            SetColor(cYellow);
 {$ENDIF}
             Rectangle(left + 2, top + 2, left + ch_width - 2, top + ch_height - 2);
           end;
@@ -3079,7 +3079,6 @@ begin
     {0001}
   exit;
 
-  //MouseHide;
   W := 100;
   H := 80; {46;}
   x := GetMaxX - W - 30;
@@ -3098,7 +3097,6 @@ begin
     OutTextXY(x + 4, y + 58, 'move  ' + 'empty')
   else
     OutTextXY(x + 4, y + 58, 'move  ' + chb[from] + chb[_to]);
-  //MouseShow;
 end;
 
 function MouseClick(var N: integer): boolean;
@@ -3271,45 +3269,32 @@ begin
      {clear input}
   while keypressed do readkey;
   MouseClick(tmp);
-
 end;
 
 begin
   pointers := TList.Create;
-  
   chb[0] := chb[0];
-
-  InitVar; {before randomize!!!}
-  //highvideo;
-  writeln('load library, please wait...');
+  InitVar; { before randomize! }
   LibLoad;
-
-{
-  grDriver := VGA; grMode := VgaHi;
-}
   grDriver := 10; grMode := 274; // 640x480 16777216     640 x 480 VESA
   WindowTitle := 'Baby Chess';
   InitGraph(grDriver, grMode, '');
-  SetColor({ptcGraph.white}cWhite);
+  SetColor(cWhite);
   ErrCode := GraphResult;
   if ErrCode <> grOk then
     Writeln('Graphics error:', GraphErrorMsg(ErrCode))
   else
   begin { Do graphics }
-
-    randomize;
-{     InitVar;}
+    Randomize;
+   {InitVar;}
     InitDefaultGame;
-    
     LoadPictures;
-    
     ShowPos;
 
     selN := -1;
     with game do
       while true do
       begin
-
         if keypressed then
           case ord(readkey) of
 
@@ -3441,6 +3426,5 @@ begin
     
     CloseGraph;
   end;
-  
   LibFree;
 end.
